@@ -3,29 +3,42 @@ from Settings import *
 import time
 import sys
 from Player import Player
-from Tilemap import Tile
+from Tilemap import *
 from Hearts import Hearts
 from pytmx.util_pygame import load_pygame
 from Slime import Slime
-
 class Level1:
     def __init__(self):
         self.SURFACE = pygame.display.get_surface()
         self.running = True
         # ------------------------------SPRITE GROUPS----------------------------------------------#
+        self.player_group = pygame.sprite.Group()
         self.hearts_group = pygame.sprite.Group()
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
+        self.pushable_tiles = pygame.sprite.Group()
+        self.enemies = pygame.sprite.Group()
         # ------------------------------TILE MAP---------------------------------------------------#
         tmx = load_pygame('../Assets/Level1/tilemap.tmx')
-        for layer in tmx.visible_layers:
-            if hasattr(layer, 'data'):
-                for x, y, surface in layer.tiles():
-                    pos = (x * 64, y * 64)
-                    Tile(pos, surface, [self.all_sprites, self.collision_sprites])
+        ground_layer = tmx.get_layer_by_name("ground")
+        brick_layer = tmx.get_layer_by_name("brick")
+        special_layer = tmx.get_layer_by_name("special")
+
+        for x, y, surface in ground_layer.tiles():
+            pos = (x * 64, y * 64)
+            Tile(pos, surface, [self.all_sprites, self.collision_sprites])
+        for x, y, surface in brick_layer.tiles():
+            pos = (x * 64, y * 64)
+            BrickTile(pos, surface, [self.all_sprites, self.collision_sprites, self.pushable_tiles], self.player_group)
+        for x, y, surface in special_layer.tiles():
+            pos = (x * 64, y * 64)
+            SpecialTile(pos, surface, [self.all_sprites, self.collision_sprites, self.pushable_tiles], self.player_group)
+        # -------------------------------------PLAYER----------------------------------------------------#
+        self.player = Player((250, HIGH - 180), [self.all_sprites, self.player_group], self.collision_sprites,
+                             self.enemies, self.pushable_tiles)
         # -------------------------------------SPRITES----------------------------------------------------#
-        self.player = Player((250, HIGH - 180), self.all_sprites, self.collision_sprites)
-        # self.slime_group.add(Slime(HIGH - self.ground.get_height(), self.slime_group))
+        Slime((950, HIGH - 180), [self.all_sprites, self.enemies], self.collision_sprites, self.player)
+        Slime((3000, HIGH - 180), [self.all_sprites, self.enemies], self.collision_sprites, self.player)
 
     def player_killed(self):
         if self.player.lives <= 0:
@@ -37,6 +50,7 @@ class Level1:
             self.all_sprites.offset = pygame.math.Vector2(0, 0)
 
     def make_hearts(self):
+        self.hearts_group.empty()
         pos = [10, 10]
         h_id = 1
         for heart in range(self.player.lives):
