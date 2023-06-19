@@ -1,3 +1,4 @@
+import pygame.mixer
 from Settings import *
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, group, collision_sprites, enemies, pushable_tiles):
@@ -6,17 +7,19 @@ class Player(pygame.sprite.Sprite):
         self.enemies = enemies
         self.pushable_tiles = pushable_tiles
         # ------------------------------PLAYER IMAGES----------------------------------------------#
-        player_left = pygame.image.load('../Assets/Player/avocado-left.png').convert_alpha()
+        self.player_left = pygame.image.load('../Assets/Player/avocado-left.png').convert_alpha()
         player_left2 = pygame.image.load('../Assets/Player/avocado-left2.png').convert_alpha()
         player_right = pygame.image.load('../Assets/Player/avocado-right.png').convert_alpha()
         player_right2 = pygame.image.load('../Assets/Player/avocado-right2.png').convert_alpha()
         player_jump_right = pygame.image.load('../Assets/Player/avocado-jump_right.png').convert_alpha()
         player_jump_left = pygame.image.load('../Assets/Player/avocado-jump_left.png').convert_alpha()
 
-        self.image_list = [[player_left, player_left2], [player_right, player_right2], player_jump_left,
+        self.image_list = [[self.player_left, player_left2], [player_right, player_right2], player_jump_left,
                            player_jump_right]
         self.player_images_index = 1
         self.animation_frame = 0
+        # ------------------------------PLAYER SOUNDS----------------------------------------------#
+
         # ------------------------------BASICS---------------------------------------------------#
         self.image = self.image_list[self.player_images_index][0]
         self.rect = self.image.get_rect(center=pos)
@@ -96,6 +99,7 @@ class Player(pygame.sprite.Sprite):
                 if self.delay >= 100 and not self.direction.y > 0 and enemy.alive:
                     self.lives -= 1
                     self.delay = 0
+                    self.smaller()
             if self.delay < 100:
                 self.delay += 1
         return hits
@@ -131,7 +135,7 @@ class Player(pygame.sprite.Sprite):
                         self.image_list[i][j] = pygame.transform.scale_by(self.image_list[i][j], 1.5)
                 else:
                     self.image_list[i] = pygame.transform.scale_by(self.image_list[i], 1.5)
-            self.rect = self.rect.scale_by(1.5, 1.5)
+            self.rect = self.image_list[0][0].get_rect(center=self.rect.center)
             self.is_bigger = True
 
     def smaller(self):
@@ -139,10 +143,11 @@ class Player(pygame.sprite.Sprite):
             for i in range(len(self.image_list)):
                 if hasattr(self.image_list[i], '__iter__'):
                     for j in range(len(self.image_list[i])):
-                        self.image_list[i][j] = pygame.transform.scale_by(self.image_list[i][j], 0.5)
+                        self.image_list[i][j] = pygame.transform.scale(self.image_list[i][j],
+                                                                       self.player_left.get_size())
                 else:
-                    self.image_list[i] = pygame.transform.scale_by(self.image_list[i], 0.5)
-            self.rect = self.rect.scale_by(0.5, 0.5)
+                    self.image_list[i] = pygame.transform.scale(self.image_list[i], self.player_left.get_size())
+            self.rect = self.player_left.get_rect(center=self.rect.center)
             self.is_bigger = False
 
     def update(self, dt):

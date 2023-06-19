@@ -1,7 +1,7 @@
 import sys
 from Settings import *
 from Levels import Levels
-from Game.Button import Button
+from Button import Button
 
 class Game:
     def __init__(self):

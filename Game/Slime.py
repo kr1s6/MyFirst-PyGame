@@ -1,7 +1,5 @@
 import pygame.image
 
-from Settings import *
-
 class Slime(pygame.sprite.Sprite):
     def __init__(self, pos, group, collision_sprites, player):
         super().__init__(group)
@@ -16,6 +14,8 @@ class Slime(pygame.sprite.Sprite):
         self.enemy_images = [slime_left, slime_right, slime_dead]
         self.enemy_images_index = 0
         self.animation_frame = 0
+        # ------------------------------SOUNDS----------------------------------------------#
+        self.player_hurt_sound = pygame.mixer.Sound('../Assets/Player/player_hurt.mp3')
         # ------------------------------BASICS---------------------------------------------------#
         self.image = self.enemy_images[self.enemy_images_index]
         self.rect = self.image.get_rect(center=pos)
@@ -60,7 +60,9 @@ class Slime(pygame.sprite.Sprite):
         if self.rect.colliderect(self.player):
             hits.append(self.player)
             if self.player.delay >= 100 and not self.player.direction.y > 0 and self.alive:
+                self.player_hurt_sound.play()
                 self.player.lives -= 1
+                self.player.smaller()
                 self.player.delay = 0
         return hits
 

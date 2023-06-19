@@ -1,11 +1,10 @@
 from Settings import *
-
 class Hearts(pygame.sprite.Sprite):
-    def __init__(self, h_id, pos, group):
+    def __init__(self, h_id, pos, group, player_lives):
         super().__init__(group)
         self.SURFACE = pygame.display.get_surface()
         self.id = h_id
-        self.lives = PLAYER_LIVES
+        self.lives = player_lives
         # ------------------------------HEARTS IMAGES------------------------------------------------#
         self.heart = pygame.image.load('../Assets/Player/heart.png').convert_alpha()
         self.heart_rect = self.heart.get_rect(topleft=pos)
