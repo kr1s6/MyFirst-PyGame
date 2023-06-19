@@ -1,6 +1,7 @@
 from Settings import *
+from Hearts import Hearts
 class Potion(pygame.sprite.Sprite):
-    def __init__(self, pos, all_sprites_group, collision_sprites, player_group, tile_top):
+    def __init__(self, pos, all_sprites_group, collision_sprites, player_group, tile_top, hearts_group):
         super().__init__(all_sprites_group)
         self.image = pygame.image.load('../Assets/potion.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
@@ -11,9 +12,11 @@ class Potion(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2(1, 0)
         self.go_out = False
         self.start = False
+        self.get_live = False
         # ------------------------------COLLISION---------------------------------------------------#
         self.collision_sprites = collision_sprites
         self.player_group = player_group
+        self.hearts_group = hearts_group
 
     def gravity(self, dt):
         self.direction.y += self.GRAVITY * dt * 60
@@ -29,8 +32,10 @@ class Potion(pygame.sprite.Sprite):
         for sprite in self.collision_sprites:
             if self.rect.colliderect(sprite):
                 hits.append(sprite)
-        if self.rect.colliderect(player):
+        if self.rect.colliderect(player) and not self.get_live:
             player.lives += 1
+            self.get_live = True
+            self.make_hearts()
             player.bigger()
             self.kill()
         return hits
@@ -62,6 +67,16 @@ class Potion(pygame.sprite.Sprite):
         if self.rect.bottom < self.tile_top:
             self.start = False
             self.go_out = True
+
+    def make_hearts(self):
+        player = self.get_player()
+        self.hearts_group.empty()
+        pos = [10, 10]
+        h_id = 1
+        for heart in range(player.lives):
+            Hearts(h_id, pos, self.hearts_group, player.lives)
+            pos[0] += 30
+            h_id += 1
 
     def update(self, dt):
         if self.start:

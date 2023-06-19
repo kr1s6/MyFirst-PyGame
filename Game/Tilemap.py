@@ -41,8 +41,9 @@ class BrickTile(pygame.sprite.Sprite):
         self.return_to_normal(player)
 
 class SpecialTile(pygame.sprite.Sprite):
-    def __init__(self, pos, surface, group, player_group):
+    def __init__(self, pos, surface, group, player_group, hearts_group):
         super().__init__(group)
+        self.SURFACE = pygame.display.get_surface()
         self.image = surface
         self.rect = self.image.get_rect(topleft=pos)
         # ------------------------------VARIABLES----------------------------------------------#
@@ -54,7 +55,7 @@ class SpecialTile(pygame.sprite.Sprite):
         # ------------------------------EMPTY IMAGE----------------------------------------------#
         self.empty = pygame.image.load('../Assets/empty_special.png').convert_alpha()
         # --------------------------------POTION-------------------------------------------------#
-        self.potion = Potion(self.rect.topleft, group[0], group[1], player_group, self.rect.top)
+        self.potion = Potion(self.rect.topleft, group[0], group[1], player_group, self.rect.top, hearts_group)
 
     def collision_check_with_player(self):
         for player in self.player_group:

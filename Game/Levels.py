@@ -2,7 +2,6 @@ import sys
 import time
 from Level1 import Level1
 from Settings import *
-
 class Levels:
     def __init__(self):
         self.SURFACE = pygame.display.get_surface()
