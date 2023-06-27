@@ -29,8 +29,8 @@ class CameraGroup(pygame.sprite.Group):
         level_end_width = 8320
         if WIDTH/2 <= player.rect.centerx <= (level_end_width - WIDTH / 2):
             self.offset.x = player.rect.centerx - WIDTH/2
-        if player.rect.centery <= HIGH/2:
-            self.offset.y = player.rect.centery - HIGH/2
+        # if player.rect.centery <= HIGH/2:
+        #         #     self.offset.y = player.rect.centery - HIGH/2
         # ------------------------------DRAWING GRAPHICS CENTERED ON PLAYER---------------------------#
         background_offset = self.background_rect.topleft
         self.SURFACE.blit(self.background, background_offset)
@@ -50,8 +50,8 @@ class FrontCameraGroup(pygame.sprite.Group):
         # ------------------------------PLAYER CENTERING----------------------------------------------#
         if player.rect.centerx >= WIDTH/2:
             self.offset.x = player.rect.centerx - WIDTH/2
-        if player.rect.centery <= HIGH/2:
-            self.offset.y = player.rect.centery - HIGH/2
+        # if player.rect.centery <= HIGH/2:
+        #     self.offset.y = player.rect.centery - HIGH/2
         # ------------------------------DRAWING GRAPHICS CENTERED ON PLAYER---------------------------#
         for sprite in self.sprites():
             offset_rect = sprite.rect.copy()

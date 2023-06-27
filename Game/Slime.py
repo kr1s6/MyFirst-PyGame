@@ -15,7 +15,7 @@ class Slime(pygame.sprite.Sprite):
         self.enemy_images_index = 0
         self.animation_frame = 0
         # ------------------------------SOUNDS----------------------------------------------#
-        self.player_hurt_sound = pygame.mixer.Sound('../Assets/Player/player_hurt.mp3')
+
         # ------------------------------BASICS---------------------------------------------------#
         self.image = self.enemy_images[self.enemy_images_index]
         self.rect = self.image.get_rect(center=pos)

@@ -43,7 +43,6 @@ class Level1(Level):
     def player_killed(self):
         if self.player.lives <= 0:
             self.player.kill()
-            self.music.stop()
             self.running = False
         if self.player.rect.centery >= HIGH:
             if self.player.lives >= 3:
