@@ -1,4 +1,4 @@
-# MyFirst-PyGame   sdsds
+# MyFirst-PyGame
 Game inspired "Mario" game and made for studies.
 Game dropped and unfinished.
 
